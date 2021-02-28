@@ -20,36 +20,33 @@ function hideLoadingSpinner() {
 function getQuote() {
     showLoadingSpinner();
 
-    fetch("https://type.fit/api/quotes")
-        .then(response => {
+    const constant = 2;
+    const tags = "inspirational";
+
+    fetch(`https://api.quotable.io/random?limit=${constant}&tags=${tags}`)
+        .then(response => {    
             return response.json();
         })
         .then(data => {
-            let random = generateRandomNumber();
-            quoteText.innerText = data[random].text;
+            quoteText.innerText = data.content;
 
-            if (data[random].author === '') {
+            if (data.author === '') {
                 authorText.innerText = 'Unknown';
             } else {
-                authorText.innerText = data[random].author;
+                authorText.innerText = data.author;
             }
 
-            if (data[random].text.length > 50) {
+            if (data.length > 50) {
                 quoteText.classList.add('long-quote');
             } else {
                 quoteText.classList.remove('long-quote');
             }
         })
         .catch(error => {
-            getQuote();
+            console.log(error);
         });
 
         hideLoadingSpinner();
-}
-
-function generateRandomNumber() {
-    let x = Math.floor((Math.random() * 1642) + 0);
-    return x;
 }
 
 function tweetQuote() {
